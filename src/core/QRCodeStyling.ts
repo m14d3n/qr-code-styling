@@ -126,6 +126,15 @@ export default class QRCodeStyling {
       return;
     }
 
+    // Convert utf8 string to byte array for qrcode-generator
+      qrcode.stringToBytes = (function () {
+        const utf8Encode = new TextEncoder();
+        return function (str: string): number[] {
+          const utf8Encoded = Array.from(utf8Encode.encode(str));
+          return utf8Encoded;
+        };
+      })();
+
     this._qr = qrcode(this._options.qrOptions.typeNumber, this._options.qrOptions.errorCorrectionLevel);
     this._qr.addData(this._options.data, this._options.qrOptions.mode || getMode(this._options.data));
     this._qr.make();
